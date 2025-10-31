@@ -371,3 +371,98 @@ github.com/valyala/fasthttp.(*workerPool).workerFunc
 github.com/valyala/fasthttp.(*workerPool).getCh.func1
 	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:196
 2025-10-31T17:52:37.239+0700	[34mINFO[0m	middleware/logger.go:32	Request completed	{"request_id": "1c4422b3-19c5-4560-915f-fee17589c142", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "status": 400}
+2025-10-31T18:13:26.692+0700	[34mINFO[0m	api/main.go:59	Starting server on :8080
+2025-10-31T18:13:34.621+0700	[34mINFO[0m	middleware/logger.go:26	Incoming request	{"request_id": "381e635e-b389-4e2e-90fc-062a93744a08", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST"}
+2025-10-31T18:13:34.623+0700	[31mERROR[0m	controller/wallet_withdrawal_controller.go:56	Validation failed for withdrawal request	{"request_id": "381e635e-b389-4e2e-90fc-062a93744a08", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "error": "Key: 'WalletWithdrawalRequest.Amount' Error:Field validation for 'Amount' failed on the 'required' tag"}
+test-interview-kc/internal/controller.(*WalletWithdrawalController).Withdraw
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/controller/wallet_withdrawal_controller.go:56
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*Ctx).Next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/ctx.go:1030
+test-interview-kc/internal/middleware.LoggerMiddleware.func1
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/middleware/logger.go:29
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*App).handler
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:170
+github.com/valyala/fasthttp.(*Server).serveConn
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/server.go:2359
+github.com/valyala/fasthttp.(*workerPool).workerFunc
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:224
+github.com/valyala/fasthttp.(*workerPool).getCh.func1
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:196
+2025-10-31T18:13:34.623+0700	[34mINFO[0m	middleware/logger.go:32	Request completed	{"request_id": "381e635e-b389-4e2e-90fc-062a93744a08", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "status": 400}
+2025-10-31T18:13:45.576+0700	[34mINFO[0m	middleware/logger.go:26	Incoming request	{"request_id": "88688171-98be-4b02-ab50-c035e3bfbd12", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST"}
+2025-10-31T18:13:45.583+0700	[31mERROR[0m	repository/wallet_account_repository_impl.go:24	Failed to get wallet account	{"request_id": "88688171-98be-4b02-ab50-c035e3bfbd12", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "error": "record not found"}
+test-interview-kc/internal/repository.(*walletAccountRepositoryImpl).GetByID
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/repository/wallet_account_repository_impl.go:24
+test-interview-kc/internal/usecase.(*walletWithdrawalUseCaseImpl).Withdraw
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/usecase/wallet_withdrawal_usecase_impl.go:25
+test-interview-kc/internal/controller.(*WalletWithdrawalController).Withdraw
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/controller/wallet_withdrawal_controller.go:63
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*Ctx).Next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/ctx.go:1030
+test-interview-kc/internal/middleware.LoggerMiddleware.func1
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/middleware/logger.go:29
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*App).handler
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:170
+github.com/valyala/fasthttp.(*Server).serveConn
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/server.go:2359
+github.com/valyala/fasthttp.(*workerPool).workerFunc
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:224
+github.com/valyala/fasthttp.(*workerPool).getCh.func1
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:196
+2025-10-31T18:13:45.584+0700	[31mERROR[0m	usecase/wallet_withdrawal_usecase_impl.go:27	Failed to get wallet account	{"request_id": "88688171-98be-4b02-ab50-c035e3bfbd12", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "error": "record not found"}
+test-interview-kc/internal/usecase.(*walletWithdrawalUseCaseImpl).Withdraw
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/usecase/wallet_withdrawal_usecase_impl.go:27
+test-interview-kc/internal/controller.(*WalletWithdrawalController).Withdraw
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/controller/wallet_withdrawal_controller.go:63
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*Ctx).Next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/ctx.go:1030
+test-interview-kc/internal/middleware.LoggerMiddleware.func1
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/middleware/logger.go:29
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*App).handler
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:170
+github.com/valyala/fasthttp.(*Server).serveConn
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/server.go:2359
+github.com/valyala/fasthttp.(*workerPool).workerFunc
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:224
+github.com/valyala/fasthttp.(*workerPool).getCh.func1
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:196
+2025-10-31T18:13:45.584+0700	[34mINFO[0m	controller/wallet_withdrawal_controller.go:66	Wallet account not found	{"request_id": "88688171-98be-4b02-ab50-c035e3bfbd12", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "wallet_id": "fb2c02ac-84e3-4119-9d97-0469762a9889"}
+2025-10-31T18:13:45.584+0700	[34mINFO[0m	middleware/logger.go:32	Request completed	{"request_id": "88688171-98be-4b02-ab50-c035e3bfbd12", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889/withdraw", "method": "POST", "status": 404}
+2025-10-31T18:13:51.428+0700	[34mINFO[0m	middleware/logger.go:26	Incoming request	{"request_id": "02d80e67-1e78-492b-951a-05de6c2f0418", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889", "method": "GET"}
+2025-10-31T18:13:51.430+0700	[31mERROR[0m	repository/wallet_account_repository_impl.go:24	Failed to get wallet account	{"request_id": "02d80e67-1e78-492b-951a-05de6c2f0418", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889", "method": "GET", "error": "record not found"}
+test-interview-kc/internal/repository.(*walletAccountRepositoryImpl).GetByID
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/repository/wallet_account_repository_impl.go:24
+test-interview-kc/internal/usecase.(*walletAccountUseCaseImpl).GetAccountDetails
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/usecase/wallet_account_usecase_impl.go:20
+test-interview-kc/internal/controller.(*walletAccountController).GetAccountDetails
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/controller/wallet_account_controller.go:42
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*Ctx).Next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/ctx.go:1030
+test-interview-kc/internal/middleware.LoggerMiddleware.func1
+	/Users/farras/Documents/Project/Interview/test-interview-kc/internal/middleware/logger.go:29
+github.com/gofiber/fiber/v2.(*App).next
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:143
+github.com/gofiber/fiber/v2.(*App).handler
+	/Users/farras/go/pkg/mod/github.com/gofiber/fiber/v2@v2.52.9/router.go:170
+github.com/valyala/fasthttp.(*Server).serveConn
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/server.go:2359
+github.com/valyala/fasthttp.(*workerPool).workerFunc
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:224
+github.com/valyala/fasthttp.(*workerPool).getCh.func1
+	/Users/farras/go/pkg/mod/github.com/valyala/fasthttp@v1.51.0/workerpool.go:196
+2025-10-31T18:13:51.431+0700	[34mINFO[0m	controller/wallet_account_controller.go:45	Wallet account not found	{"request_id": "02d80e67-1e78-492b-951a-05de6c2f0418", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889", "method": "GET", "account_id": "fb2c02ac-84e3-4119-9d97-0469762a9889"}
+2025-10-31T18:13:51.431+0700	[34mINFO[0m	middleware/logger.go:32	Request completed	{"request_id": "02d80e67-1e78-492b-951a-05de6c2f0418", "path": "/wallets/fb2c02ac-84e3-4119-9d97-0469762a9889", "method": "GET", "status": 404}

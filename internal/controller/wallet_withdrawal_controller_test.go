@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"test-interview-kc/internal/error"
+	walletError "test-interview-kc/internal/error"
 	"test-interview-kc/internal/usecase/mocks"
 
 	"github.com/go-playground/validator"
@@ -30,23 +30,25 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 
 	validBody := `{"amount":100}`
 
-	tests := []struct {
+	type testCase struct {
 		name         string
 		walletID     string
 		xRequestID   string
 		body         string
-		mockSetup    func()
+		expectCall   bool
+		mockReturn   error
 		wantStatus   int
 		wantContains string
-	}{
+	}
+
+	tests := []testCase{
 		{
-			name:       "success",
-			walletID:   "1",
-			xRequestID: "req-1",
-			body:       validBody,
-			mockSetup: func() {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(nil)
-			},
+			name:         "success",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   nil,
 			wantStatus:   http.StatusOK,
 			wantContains: "withdrawal successful",
 		},
@@ -55,7 +57,7 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 			walletID:     "1",
 			xRequestID:   "",
 			body:         validBody,
-			mockSetup:    func() {},
+			expectCall:   false,
 			wantStatus:   http.StatusBadRequest,
 			wantContains: "missing X-Request-ID",
 		},
@@ -64,7 +66,7 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 			walletID:     "1",
 			xRequestID:   "req-1",
 			body:         `invalid`,
-			mockSetup:    func() {},
+			expectCall:   false,
 			wantStatus:   http.StatusBadRequest,
 			wantContains: "invalid request body",
 		},
@@ -73,51 +75,47 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 			walletID:     "1",
 			xRequestID:   "req-1",
 			body:         `{}`,
-			mockSetup:    func() {},
+			expectCall:   false,
 			wantStatus:   http.StatusBadRequest,
 			wantContains: "VALIDATION_FAILED",
 		},
 		{
-			name:       "wallet not found",
-			walletID:   "1",
-			xRequestID: "req-1",
-			body:       validBody,
-			mockSetup: func() {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(gorm.ErrRecordNotFound)
-			},
+			name:         "wallet not found",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   gorm.ErrRecordNotFound,
 			wantStatus:   http.StatusNotFound,
 			wantContains: "WALLET_NOT_FOUND",
 		},
 		{
-			name:       "insufficient funds",
-			walletID:   "1",
-			xRequestID: "req-1",
-			body:       validBody,
-			mockSetup: func() {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(error.ErrInsufficientFunds)
-			},
+			name:         "insufficient funds",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   walletError.ErrInsufficientFunds,
 			wantStatus:   http.StatusUnprocessableEntity,
 			wantContains: "INSUFFICIENT_FUNDS",
 		},
 		{
-			name:       "already processed",
-			walletID:   "1",
-			xRequestID: "req-1",
-			body:       validBody,
-			mockSetup: func() {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(error.ErrIsAlreadyProcessed)
-			},
+			name:         "already processed",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   walletError.ErrIsAlreadyProcessed,
 			wantStatus:   http.StatusUnprocessableEntity,
 			wantContains: "ALREADY_PROCESSED",
 		},
 		{
-			name:       "internal error",
-			walletID:   "1",
-			xRequestID: "req-1",
-			body:       validBody,
-			mockSetup: func() {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(errors.New("db error"))
-			},
+			name:         "internal error",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   errors.New("db error"),
 			wantStatus:   http.StatusInternalServerError,
 			wantContains: "WITHDRAWAL_FAILED",
 		},
@@ -125,13 +123,19 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mockSetup()
+			if tt.expectCall {
+				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(tt.mockReturn)
+			}
 			req := httptest.NewRequest(http.MethodPost, "/wallets/"+tt.walletID+"/withdraw", strings.NewReader(tt.body))
+			req.Header.Set("Content-Type", "application/json")
 			if tt.xRequestID != "" {
 				req.Header.Set("X-Request-ID", tt.xRequestID)
 			}
 			resp, _ := app.Test(req)
 			assert.Equal(t, tt.wantStatus, resp.StatusCode)
+			// Optionally check response body for error message
+			// bodyBytes, _ := io.ReadAll(resp.Body)
+			// assert.Contains(t, string(bodyBytes), tt.wantContains)
 		})
 	}
 }
