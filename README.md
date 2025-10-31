@@ -63,3 +63,7 @@ make test
   ```sh
   make migrate-down
   ```
+
+## API Documentation
+
+API documentation is available in OpenAPI 3.0 format. See `docs/openapi.yaml` for the complete API specification.
