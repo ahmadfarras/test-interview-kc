@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Test Interview KC API
+  version: 1.0.0
+  description: |
+    API documentation for the Test Interview KC service.
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+
+  /wallet/{id}/withdraw:
+    post:
+      tags:
+        - Wallet
+      summary: Withdraw from wallet
+      description: |
+        Withdraw a specified amount from the wallet with the given ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Wallet ID
+          schema:
+            type: string
+        - name: X-Request-ID
+          in: header
+          required: false
+          description: Optional request ID for tracing and idempotency
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        '200':
+          description: Withdrawal successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawSuccessResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /wallet/{id}:
+    get:
+      tags:
+        - Wallet
+      summary: Get wallet details
+      description: |
+        Retrieve details of the wallet with the given ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Wallet ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Wallet details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletDetailsResponse'
+        '404':
+          description: Wallet not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    WithdrawRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          example: 100.50
+        description:
+          type: string
+          example: Withdrawal for groceries
+      required:
+        - amount
+
+    WithdrawSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: withdrawal successful
+      required:
+        - message
+
+    WalletDetailsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: wallet123
+        name:
+          type: string
+          example: My Wallet
+        balance:
+          type: number
+          format: float
+          example: 500.75
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T12:00:00Z
+        created_by:
+          type: string
+          example: user456
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-01-10T15:30:00Z
+        updated_by:
+          type: string
+          example: user789
+      required:
+        - id
+        - balance
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: error message
+      required:
+        - error
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: validation error
+        details:
+          type: array
+          description: List of validation error details
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: amount
+              message:
+                type: string
+                example: must be greater than 0
+      required:
+        - error
+        - details
+
