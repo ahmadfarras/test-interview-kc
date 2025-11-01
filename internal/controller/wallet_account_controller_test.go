@@ -68,6 +68,17 @@ func TestWalletAccountController_GetAccountDetails(t *testing.T) {
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
+		{
+			name:  "panic recovery",
+			url:   "/wallets/4",
+			param: "4",
+			mockSetup: func() {
+				mockUseCase.EXPECT().GetAccountDetails(gomock.Any(), "4").DoAndReturn(func(ctx interface{}, id string) (response.WalletAccountDetailResponse, error) {
+					panic("unexpected panic in usecase")
+				})
+			},
+			wantStatus: http.StatusInternalServerError,
+		},
 	}
 
 	for _, tt := range tests {

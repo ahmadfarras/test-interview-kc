@@ -36,6 +36,16 @@ func (wwc *WalletWithdrawalController) Withdraw(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 	log := logger.FromContext(ctx, wwc.log)
 
+	defer func() {
+		if r := recover(); r != nil {
+			log.Error("Panic recovered in Withdraw", zap.Any("panic", r))
+			c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error":   "INTERNAL_SERVER_ERROR",
+				"message": "An unexpected error occurred",
+			})
+		}
+	}()
+
 	walletID := c.Params("wallet_id")
 	xRequestID := c.Get("X-Request-ID")
 	if xRequestID == "" {

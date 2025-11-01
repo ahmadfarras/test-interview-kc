@@ -30,6 +30,16 @@ func (w *walletAccountController) GetAccountDetails(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 	log := logger.FromContext(ctx, w.log)
 
+	defer func() {
+		if r := recover(); r != nil {
+			log.Error("Panic recovered in GetAccountDetails", zap.Any("panic", r))
+			c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error":   "INTERNAL_SERVER_ERROR",
+				"message": "An unexpected error occurred",
+			})
+		}
+	}()
+
 	accountID := c.Params("id")
 	if accountID == "" {
 		log.Info("Account ID is missing in the request")

@@ -119,12 +119,28 @@ func TestWalletWithdrawalController_Withdraw(t *testing.T) {
 			wantStatus:   http.StatusInternalServerError,
 			wantContains: "WITHDRAWAL_FAILED",
 		},
+		{
+			name:         "panic recovery",
+			walletID:     "1",
+			xRequestID:   "req-1",
+			body:         validBody,
+			expectCall:   true,
+			mockReturn:   nil, // not used, will panic instead
+			wantStatus:   http.StatusInternalServerError,
+			wantContains: "INTERNAL_SERVER_ERROR",
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.expectCall {
-				mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(tt.mockReturn)
+				if tt.name == "panic recovery" {
+					mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx interface{}, req interface{}) error {
+						panic("unexpected panic in usecase")
+					})
+				} else {
+					mockUseCase.EXPECT().Withdraw(gomock.Any(), gomock.Any()).Return(tt.mockReturn)
+				}
 			}
 			req := httptest.NewRequest(http.MethodPost, "/wallets/"+tt.walletID+"/withdraw", strings.NewReader(tt.body))
 			req.Header.Set("Content-Type", "application/json")
